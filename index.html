@@ -812,15 +812,27 @@ async function verifyAndSetState() {
         if (currentAttemptFromServer === 1) {
              attemptIndex = 1;
              treatmentGroup = initialTreatmentGroup; // Use initial for first attempt
-        } else if (currentAttemptFromServer === 2) {
-             attemptIndex = 2;
-             treatmentGroup = 1 - initialTreatmentGroup; // Switch for second attempt
-        } else {
-             // Block if somehow attempts > 2
-             show('screen-blocked');
-             enterPage('blocked');
-             return;
+        } else if (currentAttemptFromServer >= 2) {
+             attemptIndex = currentAttemptFromServer;
+             // For attempts >= 2, toggle treatment based on whether the attempt number is odd or even
+             // Attempt 2 (even) -> Switch
+             // Attempt 3 (odd) -> Initial
+             // Attempt 4 (even) -> Switch
+             treatmentGroup = (currentAttemptFromServer % 2 === 0) ? (1 - initialTreatmentGroup) : initialTreatmentGroup;
         }
+
+        // if (currentAttemptFromServer === 1) {
+        //      attemptIndex = 1;
+        //      treatmentGroup = initialTreatmentGroup; // Use initial for first attempt
+        // } else if (currentAttemptFromServer === 2) {
+        //      attemptIndex = 2;
+        //      treatmentGroup = 1 - initialTreatmentGroup; // Switch for second attempt
+        // } else {
+        //      // Block if somehow attempts > 2
+        //      show('screen-blocked');
+        //      enterPage('blocked');
+        //      return;
+        // }
                            
         console.log(`Participant initial treatment: ${initialTreatmentGroup}, Current Attempt: ${attemptIndex}, Used Treatment: ${treatmentGroup}`);
         

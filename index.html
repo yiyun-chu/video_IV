@@ -253,7 +253,7 @@ z-index: 1000;
 // app script URL for logging
 // const LOGGER_URL = "https://script.google.com/macros/s/AKfycbwdRBzq3bkd8fdosDQjyYFBMG28IYEPigcQ7Mbeuj9J036RZlGwEMzKgPNaXCpId7n19w/exec"; // (qbank + replay + attempt)
 //grant weirongh
-const LOGGER_URL = "https://script.google.com/macros/s/AKfycbyPfgHAaXpZp4NNl2QngaUT9y9X7MK4Gh9mwd_IulqDVcKq5gf9yi8PwemGuEAyHQqzOA/exec"
+const LOGGER_URL = "https://script.google.com/macros/s/AKfycbx1n2ror-M-f4VziiC1up7pYU1qAbp6y1zvydh7kV8_KKf3_lNY_dn-rj6t4APjkNSPiA/exec"
 const MAX_VIDEO_MINUTES = 20;
 
 const MAX_ATTEMPTS = 1; // Maximum allowed attempts
@@ -812,27 +812,15 @@ async function verifyAndSetState() {
         if (currentAttemptFromServer === 1) {
              attemptIndex = 1;
              treatmentGroup = initialTreatmentGroup; // Use initial for first attempt
-        } else if (currentAttemptFromServer >= 2) {
-             attemptIndex = currentAttemptFromServer;
-             // For attempts >= 2, toggle treatment based on whether the attempt number is odd or even
-             // Attempt 2 (even) -> Switch
-             // Attempt 3 (odd) -> Initial
-             // Attempt 4 (even) -> Switch
-             treatmentGroup = (currentAttemptFromServer % 2 === 0) ? (1 - initialTreatmentGroup) : initialTreatmentGroup;
+        } else if (currentAttemptFromServer === 2) {
+             attemptIndex = 2;
+             treatmentGroup = 1 - initialTreatmentGroup; // Switch for second attempt
+        } else {
+             // Block if somehow attempts > 2
+             show('screen-blocked');
+             enterPage('blocked');
+             return;
         }
-
-        // if (currentAttemptFromServer === 1) {
-        //      attemptIndex = 1;
-        //      treatmentGroup = initialTreatmentGroup; // Use initial for first attempt
-        // } else if (currentAttemptFromServer === 2) {
-        //      attemptIndex = 2;
-        //      treatmentGroup = 1 - initialTreatmentGroup; // Switch for second attempt
-        // } else {
-        //      // Block if somehow attempts > 2
-        //      show('screen-blocked');
-        //      enterPage('blocked');
-        //      return;
-        // }
                            
         console.log(`Participant initial treatment: ${initialTreatmentGroup}, Current Attempt: ${attemptIndex}, Used Treatment: ${treatmentGroup}`);
         
